@@ -1,61 +1,45 @@
-import React, { Component } from "react";
-import { HashRouter as Router, Route, NavLink } from "react-router-dom";
-import SignUpForm from "./pages/SignUpForm";
-import SignInForm from "./pages/SignInForm";
+import Home from "./pages/home/Home";
+import Login from "./pages/login/Login";
+import List from "./pages/list/List";
+import Single from "./pages/single/Single";
+import New from "./pages/new/New";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { productInputs, userInputs } from "./formSource";
+import "./style/dark.scss";
+import { useContext } from "react";
+import { DarkModeContext } from "./context/darkModeContext";
 
-import "./App.css";
+function App() {
+  const { darkMode } = useContext(DarkModeContext);
 
-class App extends Component {
-  render() {
-    return (
-      <Router basename="/react-auth-ui/">
-        <div className="App">
-          <div className="appAside" />
-          <div className="appForm">
-            <div className="pageSwitcher">
-              <NavLink
-                to="/sign-in"
-                activeClassName="pageSwitcherItem-active"
-                className="pageSwitcherItem"
-              >
-                Sign In
-              </NavLink>
-              <NavLink
-                exact
-                to="/"
-                activeClassName="pageSwitcherItem-active"
-                className="pageSwitcherItem"
-              >
-                Sign Up
-              </NavLink>
-            </div>
-
-            <div className="formTitle">
-              <NavLink
-                to="/sign-in"
-                activeClassName="formTitleLink-active"
-                className="formTitleLink"
-              >
-                Sign In
-              </NavLink>{" "}
-              or{" "}
-              <NavLink
-                exact
-                to="/"
-                activeClassName="formTitleLink-active"
-                className="formTitleLink"
-              >
-                Sign Up
-              </NavLink>
-            </div>
-
-            <Route exact path="/" component={SignUpForm} />
-            <Route path="/sign-in" component={SignInForm} />
-          </div>
-        </div>
-      </Router>
-    );
-  }
+  return (
+    <div className={darkMode ? "app dark" : "app"}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route index element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="users">
+              <Route index element={<List />} />
+              <Route path=":userId" element={<Single />} />
+              <Route
+                path="new"
+                element={<New inputs={userInputs} title="Add New User" />}
+              />
+            </Route>
+            <Route path="products">
+              <Route index element={<List />} />
+              <Route path=":productId" element={<Single />} />
+              <Route
+                path="new"
+                element={<New inputs={productInputs} title="Add New Product" />}
+              />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
