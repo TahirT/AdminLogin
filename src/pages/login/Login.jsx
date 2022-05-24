@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
+import "./login.css"
 
-class SignInForm extends Component {
+class Login extends Component {
   constructor() {
     super();
 
@@ -33,7 +35,47 @@ class SignInForm extends Component {
 
   render() {
     return (
-      <div className="formCenter">
+      <div className="App">
+      <div className="appAside" />
+      <div className="appForm">
+        <div className="pageSwitcher">
+          <NavLink
+            to="/sign-in"
+            activeClassName="pageSwitcherItem-active"
+            className="pageSwitcherItem"
+          >
+            Sign In
+          </NavLink>
+          <NavLink
+            exact
+            to="/"
+            activeClassName="pageSwitcherItem-active"
+            className="pageSwitcherItem"
+          >
+            Sign Up
+          </NavLink>
+        </div>
+
+        <div className="formTitle">
+          <NavLink
+            to="/sign-in"
+            activeClassName="formTitleLink-active"
+            className="formTitleLink"
+          >
+            Sign In
+          </NavLink>{" "}
+          or{" "}
+          <NavLink
+            exact
+            to="/"
+            activeClassName="formTitleLink-active"
+            className="formTitleLink"
+          >
+            Sign Up
+          </NavLink>
+        </div>
+
+        <div className="formCenter">
         <form className="formFields" onSubmit={this.handleSubmit}>
           <div className="formField">
             <label className="formFieldLabel" htmlFor="email">
@@ -74,8 +116,12 @@ class SignInForm extends Component {
 
         </form>
       </div>
+        
+      </div>
+    </div>
+
     );
   }
 }
 
-export default SignInForm;
+export default Login;
