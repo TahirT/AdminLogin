@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./login.css"
+import { Navigate } from 'react-router-dom'
+import auth from "../../auth";
 
 class Login extends Component {
   constructor() {
@@ -33,6 +36,52 @@ class Login extends Component {
     console.log(this.state);
   }
 
+  setStorageItem = (key, value) => {
+    return localStorage && localStorage.setItem(key, value)
+  }
+
+  handleLogin() {
+  
+  const loginUrl = `https://dev.k8s.testgold.dev/interceptor/admin/v1/login`
+  const quikly_UIAccessToken = 'quikly.UIaccessToken'
+   
+  const user = {
+    "email": this.state.email,
+    "password": this.state.password,
+  }
+  const requestOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }
+  return dispatch => {
+    axios.post(loginUrl, user, requestOptions).then(
+      response => {
+        if (
+          response.data.status === 'success' &&
+          response.data.response.access_token
+        ) {
+          auth.login();
+          <Navigate to="home"/>
+          this.setStorageItem(
+            quikly_UIAccessToken,
+            response.data.response.access_token
+          )
+            console.log("Login Sucess!")
+        }
+      },
+      error => {
+        dispatch({
+          type: 'LOGIN_FAILED',
+          payload: error,
+        })
+      }
+    )
+  }
+    
+  }
+
+
   render() {
     return (
       <div className="App">
@@ -40,39 +89,24 @@ class Login extends Component {
       <div className="appForm">
         <div className="pageSwitcher">
           <NavLink
-            to="/sign-in"
+            to="/"
             activeClassName="pageSwitcherItem-active"
             className="pageSwitcherItem"
           >
             Sign In
           </NavLink>
-          <NavLink
-            exact
-            to="/"
-            activeClassName="pageSwitcherItem-active"
-            className="pageSwitcherItem"
-          >
-            Sign Up
-          </NavLink>
+          
         </div>
 
         <div className="formTitle">
           <NavLink
-            to="/sign-in"
+            to="/"
             activeClassName="formTitleLink-active"
             className="formTitleLink"
           >
             Sign In
           </NavLink>{" "}
           or{" "}
-          <NavLink
-            exact
-            to="/"
-            activeClassName="formTitleLink-active"
-            className="formTitleLink"
-          >
-            Sign Up
-          </NavLink>
         </div>
 
         <div className="formCenter">
@@ -108,7 +142,10 @@ class Login extends Component {
           </div>
 
           <div className="formField">
-            <button className="formFieldButton">Sign In</button>{" "}
+            <button 
+            className="formFieldButton"
+            onClick={this.handleLogin()}
+            >Sign In</button>{" "}
             <Link to="/" className="formFieldLink">
               Create an account
             </Link>
