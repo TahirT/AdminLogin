@@ -146,9 +146,6 @@ class Login extends Component {
             className="formFieldButton"
             onClick={this.handleLogin()}
             >Sign In</button>{" "}
-            <Link to="/" className="formFieldLink">
-              Create an account
-            </Link>
           </div>
 
         </form>
